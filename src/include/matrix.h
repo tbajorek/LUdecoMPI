@@ -11,8 +11,10 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
-    typedef struct matrix {
+    
+    #include "vector.h"
+    
+    typedef struct {
         double **values;
         int rows;
         int cols;
@@ -20,12 +22,12 @@ extern "C" {
     
     matrix* createMatrix(int rows, int cols);
     matrix* zeroMatrix(int rows, int cols);
-    double getValue(matrix* m, int row, int cols);
-    void setValue(matrix* m, int row, int cols, double value);
+    double getMatValue(matrix* m, int row, int cols);
+    void setMatValue(matrix* m, int row, int cols, double value);
     void displayMatrix(matrix* m);
     void freeMatrix(matrix* m);
-    double* getCols(matrix* m);
-    double* getRows(matrix* m);
+    vector* getColumn(matrix* m, int column);
+    vector* getRow(matrix* m, int row);
 
 
 #ifdef	__cplusplus

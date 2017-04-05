@@ -22,17 +22,17 @@ matrix* zeroMatrix(int rows, int cols) {
     m = createMatrix(rows, cols);
     for(i = 1; i <= m->rows; ++i) {
         for (j = 1; j <= m->cols; ++j) {
-            setValue(m, i, j, 0);
+            setMatValue(m, i, j, 0);
         }
     }
     return m;
 }
 
-double getValue(matrix* m, int row, int cols) {
+double getMatValue(matrix* m, int row, int cols) {
     return m->values[row-1][cols-1];
 }
 
-void setValue(matrix* m, int row, int cols, double value) {
+void setMatValue(matrix* m, int row, int cols, double value) {
     m->values[row-1][cols-1] = value;
 }
 
@@ -41,10 +41,10 @@ void displayMatrix(matrix* m) {
     double value;
     for(i = 1; i <= m->rows; ++i) {
         for (j = 1; j <= m->cols; ++j) {
-            value = getValue(m, i, j);
-            printf("%f ", value);
+            value = getMatValue(m, i, j);
+            printf("%f\t", value);
         }
-        printf('\n');
+        printf("\n");
     }
 }
 
@@ -57,12 +57,17 @@ void freeMatrix(matrix* m) {
     free(m);
 }
 
-double* getCols(matrix* m) {
-    double *d;
-    return d;
+vector* getColumn(matrix* m, int column) {
+    vector* v = createVector(m->rows);
+    int i;
+    for(i = 1; i <= m->rows; ++i) {
+        setVecValue(v, i, getMatValue(m, i, column));
+    }
+    return v;
 }
 
-double* getRows(matrix* m) {
-    double *d;
-    return d;
+vector* getRow(matrix* m, int row) {
+    vector* v = createVector(m->cols);
+    memcpy(m->values[row-1], v->values, sizeof(m->values[row-1]));
+    return v;
 }

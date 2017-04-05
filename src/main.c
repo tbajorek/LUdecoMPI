@@ -13,11 +13,8 @@
  * 
  */
 int main(int argc, char** argv) {
-    double x;
     matrix* m = zeroMatrix(12,12);
-    setValue(m,5,6,10);
-    x = getValue(m,5,6);
-    printf("%f\n", x);
+    setMatValue(m,5,6,10);
     displayMatrix(m);
     freeMatrix(m);
     return (EXIT_SUCCESS);
