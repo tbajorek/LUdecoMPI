@@ -28,6 +28,8 @@ extern "C" {
     void freeMatrix(matrix* m);
     vector* getColumn(matrix* m, int column);
     vector* getRow(matrix* m, int row);
+    matrix* readFromFile(const char* filename);
+    void writeToFile(const char* filename, matrix* m);
 
 
 #ifdef	__cplusplus

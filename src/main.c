@@ -13,9 +13,16 @@
  * 
  */
 int main(int argc, char** argv) {
-    matrix* m = zeroMatrix(12,12);
-    setMatValue(m,5,6,10);
-    displayMatrix(m);
+    matrix* m2;
+    matrix* m = zeroMatrix(3,3);
+    setMatValue(m,1,1,10);
+    setMatValue(m,2,3,4);
+    setMatValue(m,3,2,7);
+    //displayMatrix(m);
+    writeToFile("test.txt", m);
+    m2 = readFromFile("test.txt");
+    displayMatrix(m2);
+    freeMatrix(m2);
     freeMatrix(m);
     return (EXIT_SUCCESS);
 }
