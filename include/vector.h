@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   vector.h
  * Author: tomek
  *
@@ -16,7 +16,7 @@ extern "C" {
         double* values;
         int size;
     } vector;
-    
+
     vector* createVector(int size);
     vector* createFromArray(double* values, int size);
     void freeFector(vector* v);
@@ -29,4 +29,3 @@ extern "C" {
 #endif
 
 #endif	/* VECTOR_H */
-
