@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   maina.c
  * Author: tomek
  *
@@ -7,10 +7,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "include/matrix.h"
+#include "../include/matrix.h"
 
 /*
- * 
+ *
  */
 int main(int argc, char** argv) {
     matrix* m2;
@@ -26,4 +26,3 @@ int main(int argc, char** argv) {
     freeMatrix(m);
     return (EXIT_SUCCESS);
 }
-

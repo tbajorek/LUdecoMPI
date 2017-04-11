@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "include/matrix.h"
+#include "../include/matrix.h"
 
 matrix* createMatrix(int rows, int cols) {
     matrix* m;
