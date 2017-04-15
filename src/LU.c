@@ -1,5 +1,5 @@
-#include "../include/LU.h"
+#include "include/LU.h"
 
 matrix* decompose(matrix* m) {
-
+    
 }

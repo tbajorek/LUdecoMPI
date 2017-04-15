@@ -19,8 +19,8 @@ int main(int argc, char** argv) {
     setMatValue(m,2,3,4);
     setMatValue(m,3,2,7);
     //displayMatrix(m);
-    writeToFile("bin/test.txt", m);
-    m2 = readFromFile("bin/test.txt");
+    writeToFile("test.txt", m);
+    m2 = readFromFile("test.txt");
     displayMatrix(m2);
     freeMatrix(m2);
     freeMatrix(m);
