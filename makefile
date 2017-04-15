@@ -8,6 +8,7 @@ SOURCEDIR=src/
 OBJDIR=obj/
 INCLUDEDIR=include/
 TARGETDIR=bin/
+RESOURCESDIR=resources/
 
 CFILES=$(wildcard $(SOURCEDIR)*.c)
 OBJFILES=$(addprefix $(OBJDIR),$(notdir $(CFILES:.c=.o)))
@@ -21,7 +22,7 @@ all: build run
 run:
 	./$(TARGETFILE)
 
-build:$(OBJDIR) $(TARGETDIR) $(TARGETFILE)
+build:$(OBJDIR) $(TARGETDIR) $(TARGETFILE) $(RESOURCESDIR)
 
 $(TARGETFILE): $(OBJFILES)
 	$(CC) $(OBJFILES) -o $(TARGETFILE) $(LIBS)
@@ -36,6 +37,8 @@ $(OBJDIR):
 	mkdir -p $(OBJDIR)
 $(TARGETDIR):
 	mkdir -p $(TARGETDIR)
+$(RESOURCESDIR):
+	mkdir -p $(RESOURCESDIR)
 
 clean:
 	rm -f $(OBJDIR)*.o $(TARGETFILE)
