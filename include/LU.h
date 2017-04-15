@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   LU.h
  * Author: tomek
  *
@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 #include "matrix.h"
-    
+
     matrix* decompose(matrix* m);
 
 
@@ -22,4 +22,3 @@ extern "C" {
 #endif
 
 #endif	/* LU_H */
-
