@@ -1,4 +1,5 @@
 CC=gcc
+FLAGS=-g
 #Makro CC zawiera nazwę kompilatora
 #CFLAGS=-Wall -ansi -pedantic
 #Makro CFLAGS zawiera parametry kompilatora
@@ -25,11 +26,11 @@ run:
 build:$(OBJDIR) $(TARGETDIR) $(TARGETFILE) $(RESOURCESDIR)
 
 $(TARGETFILE): $(OBJFILES)
-	$(CC) $(OBJFILES) -o $(TARGETFILE) $(LIBS)
+	$(CC) $(FLAGS) $(OBJFILES) -o $(TARGETFILE) $(LIBS)
 	@echo executable file $(TARGETFILE) created
 
 $(OBJFILES): $(OBJDIR)%.o: $(SOURCEDIR)%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(FLAGS) -c $< -o $@
 
 $(OBJFILES): $(INCFILES)
 
@@ -45,4 +46,6 @@ clean:
 	rm -R ${OBJDIR} ${TARGETDIR}
 	@echo clean finished
 
-.PHONY: all clean build run
+mem: build
+	valgrind --leak-check=full  $(TARGETFILE)
+.PHONY: all clean build run mem

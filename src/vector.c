@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "../include/vector.h"
 
@@ -9,13 +10,35 @@ vector* createVector(int size) {
     return v;
 }
 
+vector* zeroVector(int size) {
+    vector* m;
+    int i, j;
+    m = createVector(size);
+    for(i = 0; i < m->size; ++i) {
+      m->values[i] = 0;
+    }
+    return m;
+}
+
+void displayVector(vector* v){
+    printf("-------vector begin-------\n");
+    int i, j;
+    double value;
+    for (i = 0; i < v->size; ++i) {
+        value = v->values[i];
+        printf("%lf\t", value);
+    }
+    printf("\n");
+    printf("-------vector end-------\n");
+}
+
 vector* createFromArray(double* values, int size) {
     vector* v = createVector(size);
     memcpy(values, v->values, sizeof(values));
     return v;
 }
 
-void freeFector(vector* v) {
+void freeVector(vector* v) {
     free(v->values);
     free(v);
 }

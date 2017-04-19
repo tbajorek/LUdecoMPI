@@ -18,10 +18,12 @@ extern "C" {
     } vector;
 
     vector* createVector(int size);
+    vector* zeroVector(int size);
     vector* createFromArray(double* values, int size);
-    void freeFector(vector* v);
+    void freeVector(vector* v);
     void setVecValue(vector* v, int pos, double value);
     double getVecValue(vector* v, int pos);
+    void displayVector(vector* v);
 
 
 #ifdef	__cplusplus

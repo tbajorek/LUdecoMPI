@@ -16,6 +16,17 @@ matrix* createMatrix(int rows, int cols) {
     return m;
 }
 
+matrix* copyMatrix(matrix * m){
+  int i, j;
+  matrix* m2 = zeroMatrix(m->rows, m->cols);
+  for(i = 1; i <= m2->rows; ++i) {
+      for (j = 1; j <= m2->cols; ++j) {
+          setMatValue(m2, i, j, m->values[i-1][j-1]);
+      }
+  }
+  return m2;
+}
+
 matrix* zeroMatrix(int rows, int cols) {
     matrix* m;
     int i, j;
@@ -29,16 +40,17 @@ matrix* zeroMatrix(int rows, int cols) {
 }
 
 double getMatValue(matrix* m, int row, int col) {
-    return m->values[col-1][row-1];
+    return m->values[row-1][col-1];
 }
 
 void setMatValue(matrix* m, int row, int col, double value) {
-    m->values[col-1][row-1] = value;
+    m->values[row-1][col-1] = value;
 }
 
 void displayMatrix(matrix* m) {
     int i, j;
     double value;
+    printf("-------matrix begin-------\n");
     for(i = 1; i <= m->rows; ++i) {
         for (j = 1; j <= m->cols; ++j) {
             value = getMatValue(m, i, j);
@@ -46,6 +58,7 @@ void displayMatrix(matrix* m) {
         }
         printf("\n");
     }
+    printf("-------matrix end-------\n");
 }
 
 void freeMatrix(matrix* m) {
