@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     displayMatrix(m);
     
     printf("--------------\n");
-    matrix* m2 = decompose(m);
+    matrix* m2 = decompose(m, argc, argv);
     
     printf("----------Koncowa macierz m2----\n");
     displayMatrix(m2);

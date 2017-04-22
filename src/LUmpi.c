@@ -1,5 +1,6 @@
 #include "../include/LU.h"
 #include <stdio.h>
+#include "mpi.h"
 
 #ifdef METHOD_MPI
 
@@ -10,11 +11,16 @@ void updateColumn(vector* c, vector* l, int k) {
     }
 }
 
-matrix* decompose(matrix* m) {
-    matrix *m2 = copyMatrix(m);
+matrix* decompose(matrix* m, int argc, char** argv) {
+    int n, myid, numprocs;
+    matrix *m2;
     int j,k,s;
     vector* column;
     vector* kcolumn;
+    MPI_Init(&argc,&argv); 
+    MPI_Comm_size(MPI_COMM_WORLD,&numprocs); 
+    MPI_Comm_rank(MPI_COMM_WORLD,&myid);
+    m2 = copyMatrix(m);
     for(k=1; k <= m2->cols-1; k++){
         // STEP 1
         for (s=k+1; s <= m2->rows; s++) {
@@ -30,6 +36,7 @@ matrix* decompose(matrix* m) {
         }
         freeVector(kcolumn);
     }
+    MPI_Finalize();
     return m2;
 }
 

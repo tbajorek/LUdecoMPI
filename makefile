@@ -4,6 +4,7 @@ FLAGS=-g
 #CFLAGS=-Wall -ansi -pedantic
 #Makro CFLAGS zawiera parametry kompilatora
 TARGET=main
+NODES=nodes
 
 SOURCEDIR=src/
 OBJDIR=obj/
@@ -15,13 +16,14 @@ CFILES=$(wildcard $(SOURCEDIR)*.c)
 OBJFILES=$(addprefix $(OBJDIR),$(notdir $(CFILES:.c=.o)))
 INCFILES=$(wildcard $(INCLUDEDIR)*.h)
 TARGETFILE=$(addprefix $(TARGETDIR),$(TARGET))
+NODESFILE=$(addprefix $(TARGETDIR),$(NODES))
 
 LIBS=-lm
 
 all: build run
 
 run:
-	./$(TARGETFILE)
+	mpiexec ./$(TARGETFILE)
 
 build:$(OBJDIR) $(TARGETDIR) $(TARGETFILE) $(RESOURCESDIR)
 

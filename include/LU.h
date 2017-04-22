@@ -16,7 +16,7 @@ extern "C" {
     
     #define METHOD_MPI
 
-    matrix* decompose(matrix* m);
+    matrix* decompose(matrix* m, int argc, char** argv);
 
 #ifdef	__cplusplus
 }
