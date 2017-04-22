@@ -23,7 +23,7 @@ LIBS=-lm
 all: build run
 
 run:
-	mpiexec ./$(TARGETFILE)
+	mpiexec -n 2 ./$(TARGETFILE)
 
 build:$(OBJDIR) $(TARGETDIR) $(TARGETFILE) $(RESOURCESDIR)
 

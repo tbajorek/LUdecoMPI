@@ -17,6 +17,7 @@ extern "C" {
     typedef struct {
         cell* values;
         int size;
+        int id;
     } vector;
 
     vector* createVector(int size);

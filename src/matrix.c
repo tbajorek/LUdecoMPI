@@ -86,12 +86,14 @@ vector* getRow(matrix* m, int row) {
     for(i = 1; i <= m->cols; ++i) {
         setVecValue(v, i, getMatValue(m, row, i));
     }
+    v->id = row;
     return v;
 }
 
 vector* getColumn(matrix* m, int column) {
     vector* v = createVector(m->cols);
     memcpy((void*)v->values, (const void*)m->values[column-1], (size_t)(m->cols*sizeof(cell)));
+    v->id = column;
     return v;
 }
 
