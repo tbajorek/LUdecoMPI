@@ -1,4 +1,4 @@
-CC=gcc
+CC=mpicc
 FLAGS=-g
 #Makro CC zawiera nazwę kompilatora
 #CFLAGS=-Wall -ansi -pedantic

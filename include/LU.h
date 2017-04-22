@@ -13,11 +13,10 @@ extern "C" {
 #endif
 
 #include "matrix.h"
+    
+    #define METHOD_MPI
 
     matrix* decompose(matrix* m);
-
-    //double compute_l_ij(int rowi, int colj, matrix * matrix_obj);
-
 
 #ifdef	__cplusplus
 }

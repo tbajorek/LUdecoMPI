@@ -11,17 +11,19 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+    
+    typedef double cell;
 
     typedef struct {
-        double* values;
+        cell* values;
         int size;
     } vector;
 
     vector* createVector(int size);
     vector* zeroVector(int size);
-    vector* createFromArray(double* values, int size);
+    vector* createFromArray(cell* values, int size);
     void freeVector(vector* v);
-    void setVecValue(vector* v, int pos, double value);
+    void setVecValue(vector* v, int pos, cell value);
     double getVecValue(vector* v, int pos);
     void displayVector(vector* v);
 

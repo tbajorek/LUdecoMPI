@@ -1,4 +1,4 @@
-/*
+/* 
  * File:   matrix.h
  * Author: tomek
  *
@@ -11,23 +11,25 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
+    
     #include "vector.h"
-
+    
     typedef struct {
-        double **values;
+        cell **values;
         int rows;
         int cols;
     } matrix;
-
+    
     matrix* createMatrix(int rows, int cols);
     matrix* zeroMatrix(int rows, int cols);
     matrix* copyMatrix(matrix * m);
+    matrix* createMatrixFromArray(const double** a, int rows, int cols);
     double getMatValue(matrix* m, int row, int cols);
-    void setMatValue(matrix* m, int row, int cols, double value);
+    void setMatValue(matrix* m, int row, int cols, cell value);
     void displayMatrix(matrix* m);
     void freeMatrix(matrix* m);
     vector* getColumn(matrix* m, int column);
+    void setColumn(matrix* m, vector* c, int column);
     vector* getRow(matrix* m, int row);
     matrix* readFromFile(const char* filename);
     void writeToFile(const char* filename, matrix* m);
@@ -38,3 +40,4 @@ extern "C" {
 #endif
 
 #endif	/* MATRIX_H */
+

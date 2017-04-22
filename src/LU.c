@@ -1,22 +1,24 @@
 #include "../include/LU.h"
-#include "../include/utils.h"
 #include <stdio.h>
+
+#ifdef METHOD_SEQ
+
 matrix* decompose(matrix* m) {
-  int numOfCol = m->cols;
-  int numOfRows = m->rows;
-  matrix *m2 = copyMatrix(m);
-  int i,j,k,s;
-  for(k=0; k<numOfCol-1; k++){
-    // STEP 1
-    for ( s=k+1 ;s <numOfRows ; s++) {
-      m2->values[s][k] = m2->values[s][k]/m2->values[k][k];
+    matrix *m2 = copyMatrix(m);
+    int i,j,k,s;
+    for(k=1; k <= m->cols-1; k++){
+        // STEP 1
+        for (s=k+1; s <= m->rows; s++) {
+            setMatValue(m2, s, k, getMatValue(m2, s, k)/getMatValue(m2, k, k));
+        }
+        // STEP 2
+        for (i = k+1; i <= m->cols; i++) {
+            for (j = k+1; j <= m->rows; j++){
+                setMatValue(m2, i, j, getMatValue(m2, i, j) - getMatValue(m2, i, k) * getMatValue(m2, k, j));
+            }
+        }
     }
-    // STEP 2
-    for (i = k+1 ;i <numOfCol ; i++) {
-      for (j = k+1; j <numOfRows ; j++){
-        m2->values[i][j] = m2->values[i][j] - m2->values[i][k]*m2->values[k][j];
-      }
-    }
-  }
-  return m2;
+    return m2;
 }
+
+#endif

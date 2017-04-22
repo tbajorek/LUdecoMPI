@@ -5,7 +5,7 @@
 
 vector* createVector(int size) {
     vector* v = (vector*)malloc(sizeof(vector));
-    v->values = (double*)calloc(size,sizeof(double));
+    v->values = (cell*)calloc(size,sizeof(cell));
     v->size = size;
     return v;
 }
@@ -32,7 +32,7 @@ void displayVector(vector* v){
     printf("-------vector end-------\n");
 }
 
-vector* createFromArray(double* values, int size) {
+vector* createFromArray(cell* values, int size) {
     vector* v = createVector(size);
     memcpy(values, v->values, sizeof(values));
     return v;

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../include/matrix.h"
 
@@ -9,22 +10,11 @@ matrix* createMatrix(int rows, int cols) {
     m = (matrix*) malloc(sizeof(matrix));
     m->rows = rows;
     m->cols = cols;
-    m->values = (double**) malloc(cols*sizeof(double*));
+    m->values = (cell**) malloc(cols*sizeof(cell*));
     for (j = 0; j < m->cols; ++j) {
-        m->values[j] = (double*) malloc(rows*sizeof(double));
+        m->values[j] = (cell*) malloc(rows*sizeof(cell));
     }
     return m;
-}
-
-matrix* copyMatrix(matrix * m){
-  int i, j;
-  matrix* m2 = zeroMatrix(m->rows, m->cols);
-  for(i = 1; i <= m2->rows; ++i) {
-      for (j = 1; j <= m2->cols; ++j) {
-          setMatValue(m2, i, j, m->values[i-1][j-1]);
-      }
-  }
-  return m2;
 }
 
 matrix* zeroMatrix(int rows, int cols) {
@@ -39,18 +29,39 @@ matrix* zeroMatrix(int rows, int cols) {
     return m;
 }
 
-double getMatValue(matrix* m, int row, int col) {
-    return m->values[row-1][col-1];
+matrix* copyMatrix(matrix * m) {
+    int i, j;
+    matrix* m2 = zeroMatrix(m->rows, m->cols);
+    for(i = 1; i <= m->rows; ++i) {
+        for (j = 1; j <= m->cols; ++j) {
+            setMatValue(m2, i, j, getMatValue(m, i, j));
+        }
+    }
+    return m2;
 }
 
-void setMatValue(matrix* m, int row, int col, double value) {
-    m->values[row-1][col-1] = value;
+matrix* createMatrixFromArray(const double** a, int rows, int cols) {
+    int i, j;
+    matrix* m = createMatrix(rows, cols);
+    for(i = 1; i < rows; ++i) {
+        for(j = 1; j < rows; ++j) {
+            setMatValue(m, i, j, a[i-1][j-1]);
+        }
+    }
+    return m;
+}
+
+double getMatValue(matrix* m, int row, int col) {
+    return m->values[col-1][row-1];
+}
+
+void setMatValue(matrix* m, int row, int col, cell value) {
+    m->values[col-1][row-1] = value;
 }
 
 void displayMatrix(matrix* m) {
     int i, j;
-    double value;
-    printf("-------matrix begin-------\n");
+    cell value;
     for(i = 1; i <= m->rows; ++i) {
         for (j = 1; j <= m->cols; ++j) {
             value = getMatValue(m, i, j);
@@ -58,7 +69,6 @@ void displayMatrix(matrix* m) {
         }
         printf("\n");
     }
-    printf("-------matrix end-------\n");
 }
 
 void freeMatrix(matrix* m) {
@@ -79,15 +89,19 @@ vector* getRow(matrix* m, int row) {
     return v;
 }
 
-vector* getColumn(matrix* m, int col) {
+vector* getColumn(matrix* m, int column) {
     vector* v = createVector(m->cols);
-    memcpy(m->values[col-1], v->values, sizeof(m->values[col-1]));
+    memcpy((void*)v->values, (const void*)m->values[column-1], (size_t)(m->cols*sizeof(cell)));
     return v;
+}
+
+void setColumn(matrix* m, vector* c, int column) {
+    memcpy((void*)m->values[column-1], (const void*)c->values, (size_t)(c->size*sizeof(cell)));
 }
 
 matrix* readFromFile(const char* filename) {
     int rows, cols, i, j;
-    double buffer;
+    cell buffer;
     matrix* m;
     FILE *mfile = fopen(filename, "r");
     fscanf(mfile, "%d\t%d\n", &rows, &cols);
@@ -105,7 +119,7 @@ matrix* readFromFile(const char* filename) {
 
 void writeToFile(const char* filename, matrix* m) {
     int i, j;
-    double value;
+    cell value;
     FILE *mfile = fopen(filename, "w+");
     fprintf(mfile, "%d\t%d\n", m->rows, m->cols);
     for(i = 1; i <= m->rows; ++i) {
