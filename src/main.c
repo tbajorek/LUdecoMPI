@@ -31,8 +31,6 @@ int main(int argc, char** argv) {
 
         printf("----------Poczatkowa macierz m----\n");
         displayMatrix(m);
-
-        printf("--------------\n");
     } else {
         m = ghostMatrix(6,6);
     }

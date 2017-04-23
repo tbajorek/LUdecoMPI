@@ -21,7 +21,6 @@ vector* zeroVector(int size) {
 }
 
 void displayVector(vector* v){
-    printf("-------vector begin-------\n");
     int i, j;
     double value;
     for (i = 0; i < v->size; ++i) {
@@ -29,7 +28,6 @@ void displayVector(vector* v){
         printf("%lf\t", value);
     }
     printf("\n");
-    printf("-------vector end-------\n");
 }
 
 vector* createFromArray(cell* values, int size) {
