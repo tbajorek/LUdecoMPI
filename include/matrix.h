@@ -22,6 +22,7 @@ extern "C" {
     
     matrix* createMatrix(int rows, int cols);
     matrix* zeroMatrix(int rows, int cols);
+    matrix* ghostMatrix(int rows, int cols);
     matrix* copyMatrix(matrix * m);
     matrix* createMatrixFromArray(const double** a, int rows, int cols);
     double getMatValue(matrix* m, int row, int cols);

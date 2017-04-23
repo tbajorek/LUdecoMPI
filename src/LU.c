@@ -3,7 +3,13 @@
 
 #ifdef METHOD_SEQ
 
-matrix* decompose(matrix* m, int argc, char** argv) {
+env init(int argc, char** argv) {
+    env e;
+    e.myid = 0;
+    e.numprocs = 0;
+}
+
+matrix* decompose(matrix* m) {
     matrix *m2 = copyMatrix(m);
     int i,j,k,s;
     for(k=1; k <= m->cols-1; k++){
@@ -20,5 +26,7 @@ matrix* decompose(matrix* m, int argc, char** argv) {
     }
     return m2;
 }
+
+void finish() {}
 
 #endif

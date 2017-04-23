@@ -15,8 +15,20 @@ extern "C" {
 #include "matrix.h"
     
     #define METHOD_MPI
-
-    matrix* decompose(matrix* m, int argc, char** argv);
+    
+    typedef struct {
+        matrix* m;
+        int pid;
+    } result;
+    
+    typedef struct {
+        int myid;
+        int numprocs;
+    } env;
+    
+    env init(int argc, char** argv);
+    matrix* decompose(matrix* m, env e);
+    void finish();
 
 #ifdef	__cplusplus
 }

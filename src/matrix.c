@@ -29,6 +29,16 @@ matrix* zeroMatrix(int rows, int cols) {
     return m;
 }
 
+matrix* ghostMatrix(int rows, int cols) {
+    matrix* m;
+    int j;
+    m = (matrix*) malloc(sizeof(matrix));
+    m->rows = rows;
+    m->cols = cols;
+    m->values = 0;
+    return m;
+}
+
 matrix* copyMatrix(matrix * m) {
     int i, j;
     matrix* m2 = zeroMatrix(m->rows, m->cols);
@@ -73,10 +83,12 @@ void displayMatrix(matrix* m) {
 
 void freeMatrix(matrix* m) {
     int i;
-    for (i = 0; i < m->cols; ++i) {
-        free(m->values[i]);
+    if (m->values != 0) {
+        for (i = 0; i < m->cols; ++i) {
+            free(m->values[i]);
+        }
+        free(m->values);
     }
-    free(m->values);
     free(m);
 }
 

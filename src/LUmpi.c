@@ -34,39 +34,49 @@ void sendColumn(vector* column, int procid) {
     MPI_Send(&column->id, 1, MPI_INT, procid, 3, MPI_COMM_WORLD);
 }
 
-void receiveColumn(vector* column, MPI_Status *status) {
+env init(int argc, char** argv) {
+    env e;
+    MPI_Init(&argc,&argv); 
+    MPI_Comm_size(MPI_COMM_WORLD,&e.numprocs); 
+    MPI_Comm_rank(MPI_COMM_WORLD,&e.myid);
+    return e;
+}
+
+vector* receiveColumn(MPI_Status *status) {
     int size;
+    vector* column;
     MPI_Recv(&size, 1, MPI_INT, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, status);
-    column = zeroVector(size);
+    column = createVector(size);
     MPI_Recv(column->values, size, MPI_DOUBLE, MPI_ANY_SOURCE, 2, MPI_COMM_WORLD, status);
     MPI_Recv(&column->id, 1, MPI_INT, MPI_ANY_SOURCE, 3, MPI_COMM_WORLD, status);
+    return column;
 }
 
 int getProcIdByColumn(int column, int numprocs) {
     return column%(numprocs-1)+1;
 }
 
-matrix* decompose(matrix* m, int argc, char** argv) {
-    int n, myid, numprocs, procit;
+matrix* decompose(matrix* m, env e) {
+    int n, procit;
     matrix *m2;
     int j,k,s;
-    vector* column;
-    vector *kcolumn, *recvKcolumn, *recvColumn;
-    MPI_Datatype* vectorType;
+    vector *column, *kcolumn, *recvKcolumn, *recvColumn;
+    //MPI_Datatype* vectorType;
     MPI_Status status;
-    MPI_Init(&argc,&argv); 
-    MPI_Comm_size(MPI_COMM_WORLD,&numprocs); 
-    MPI_Comm_rank(MPI_COMM_WORLD,&myid);
-    vectorType = createMpiDatatypeForVector(m->rows);
-    m2 = copyMatrix(m);
-    
-    for(k=1; k <= m2->cols-1; k++){
+    int cols = m->cols;
+    int myid = e.myid, numprocs = e.numprocs;
+    //vectorType = createMpiDatatypeForVector(m->rows);
+    if (myid == 0) {
+        m2 = copyMatrix(m);
+    } else {
+        m2 = ghostMatrix(m->rows, m->cols);
+    }
+    for(k=1; k <= cols-1; k++){
         if (myid == 0) {
             // STEP 1
             for (s=k+1; s <= m2->rows; s++) {
                 setMatValue(m2, s, k, getMatValue(m2, s, k)/getMatValue(m2, k, k));
             }
-            // STEP 2
             kcolumn = getColumn(m2, k);
             for (procit = 1; procit < numprocs; ++procit) {
                 //MPI_Send(kcolumn, 1, *vectorType, procit, KCOLUMN, MPI_COMM_WORLD);
@@ -75,31 +85,34 @@ matrix* decompose(matrix* m, int argc, char** argv) {
             freeVector(kcolumn);
         } else {
             //MPI_Recv(recvKcolumn, 1, *vectorType, MPI_ANY_SOURCE, KCOLUMN,MPI_COMM_WORLD, &status );
-            receiveColumn(recvKcolumn, &status);
+            recvKcolumn = receiveColumn(&status);
         }
-        for (j = k+1; j <= m2->cols; j++) {
+        // STEP 2
+        for (j = k+1; j <= cols; j++) {
             if (myid == 0) {
                 column = getColumn(m2, j);
                 //MPI_Send(column, 1, *vectorType, getProcIdByColumn(j, numprocs), COL2UPDATE, MPI_COMM_WORLD);
                 sendColumn(column, getProcIdByColumn(j, numprocs));
-                //freeVector(column);
+                freeVector(column);
                 //MPI_Recv(column, 1, *vectorType, MPI_ANY_SOURCE, COL2UPDATE, MPI_COMM_WORLD, &status );
-                //receiveColumn(column, &status);
+                column = receiveColumn(&status);
                 setColumn(m2, column, column->id);
                 freeVector(column);
             } else {
                 //MPI_Recv(recvColumn, 1, *vectorType, MPI_ANY_SOURCE, COL2UPDATE,MPI_COMM_WORLD, &status );
-                receiveColumn(recvColumn, &status);
-                //updateColumn(recvColumn, recvKcolumn, recvKcolumn->id);
+                recvColumn = receiveColumn(&status);
+                updateColumn(recvColumn, recvKcolumn, recvKcolumn->id);
                 //MPI_Send(column, 1, *vectorType, 0, COL2UPDATE, MPI_COMM_WORLD);
-                //sendColumn(recvColumn, 0);
+                sendColumn(recvColumn, 0);
                 freeVector(recvColumn);
             }
         }
-        
+        if (myid != 0) {
+            freeVector(recvKcolumn);
+        }
     }
     
-    MPI_Type_free(vectorType);
+    //MPI_Type_free(vectorType);
     MPI_Finalize();
     return m2;
 }
