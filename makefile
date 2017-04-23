@@ -1,5 +1,6 @@
 CC=mpicc
 FLAGS=-g
+RUNFLAGS=
 #Makro CC zawiera nazwę kompilatora
 #CFLAGS=-Wall -ansi -pedantic
 #Makro CFLAGS zawiera parametry kompilatora
@@ -20,10 +21,12 @@ NODESFILE=$(addprefix $(TARGETDIR),$(NODES))
 
 LIBS=-lm
 
+NUMOFPROCS?=2
+
 all: build run
 
 run:
-	mpiexec -n 2 ./$(TARGETFILE)
+	mpiexec $(RUNFLAGS) -n $(NUMOFPROCS) ./$(TARGETFILE)
 
 build:$(OBJDIR) $(TARGETDIR) $(TARGETFILE) $(RESOURCESDIR)
 

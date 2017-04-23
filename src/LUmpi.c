@@ -1,6 +1,7 @@
 #include "../include/LU.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include "mpi.h"
 
 #ifdef METHOD_MPI
@@ -36,8 +37,8 @@ void sendColumn(vector* column, int procid) {
 
 env init(int argc, char** argv) {
     env e;
-    MPI_Init(&argc,&argv); 
-    MPI_Comm_size(MPI_COMM_WORLD,&e.numprocs); 
+    MPI_Init(&argc,&argv);
+    MPI_Comm_size(MPI_COMM_WORLD,&e.numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD,&e.myid);
     return e;
 }
@@ -111,7 +112,7 @@ matrix* decompose(matrix* m, env e) {
             freeVector(recvKcolumn);
         }
     }
-    
+
     //MPI_Type_free(vectorType);
     MPI_Finalize();
     return m2;
