@@ -28,6 +28,20 @@ MPI_Datatype* createMpiDatatypeForVector(int size) {
     return datatype;
 }
 
+void sendColumn(vector* column, int procid) {
+    MPI_Send(&column->size, 1, MPI_INT, procid, 1, MPI_COMM_WORLD);
+    MPI_Send(column->values, column->size, MPI_DOUBLE, procid, 2, MPI_COMM_WORLD);
+    MPI_Send(&column->id, 1, MPI_INT, procid, 3, MPI_COMM_WORLD);
+}
+
+void receiveColumn(vector* column, MPI_Status *status) {
+    int size;
+    MPI_Recv(&size, 1, MPI_INT, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, status);
+    column = zeroVector(size);
+    MPI_Recv(column->values, size, MPI_DOUBLE, MPI_ANY_SOURCE, 2, MPI_COMM_WORLD, status);
+    MPI_Recv(&column->id, 1, MPI_INT, MPI_ANY_SOURCE, 3, MPI_COMM_WORLD, status);
+}
+
 int getProcIdByColumn(int column, int numprocs) {
     return column%(numprocs-1)+1;
 }
@@ -55,24 +69,33 @@ matrix* decompose(matrix* m, int argc, char** argv) {
             // STEP 2
             kcolumn = getColumn(m2, k);
             for (procit = 1; procit < numprocs; ++procit) {
-                MPI_Send(kcolumn->values, kcolumn->size, MPI_DOUBLE, procit, KCOLUMN, MPI_COMM_WORLD);
+                //MPI_Send(kcolumn, 1, *vectorType, procit, KCOLUMN, MPI_COMM_WORLD);
+                sendColumn(kcolumn, procit);
             }
             freeVector(kcolumn);
+        } else {
+            //MPI_Recv(recvKcolumn, 1, *vectorType, MPI_ANY_SOURCE, KCOLUMN,MPI_COMM_WORLD, &status );
+            receiveColumn(recvKcolumn, &status);
         }
-        /*for (j = k+1; j <= m2->cols; j++) {
+        for (j = k+1; j <= m2->cols; j++) {
             if (myid == 0) {
                 column = getColumn(m2, j);
-                MPI_Send(column, 1, vectorType, getProcIdByColumn(j, numprocs), COL2UPDATE, MPI_COMM_WORLD);
-                MPI_Recv(column, 1, vectorType, MPI_ANY_SOURCE, COL2UPDATE, MPI_COMM_WORLD, &status );
+                //MPI_Send(column, 1, *vectorType, getProcIdByColumn(j, numprocs), COL2UPDATE, MPI_COMM_WORLD);
+                sendColumn(column, getProcIdByColumn(j, numprocs));
+                //freeVector(column);
+                //MPI_Recv(column, 1, *vectorType, MPI_ANY_SOURCE, COL2UPDATE, MPI_COMM_WORLD, &status );
+                //receiveColumn(column, &status);
                 setColumn(m2, column, column->id);
                 freeVector(column);
             } else {
-                MPI_Recv(recvKcolumn, 1, vectorType, MPI_ANY_SOURCE, KCOLUMN,MPI_COMM_WORLD, &status );
-                MPI_Recv(recvColumn, 1, vectorType, MPI_ANY_SOURCE, COL2UPDATE,MPI_COMM_WORLD, &status );
-                updateColumn(recvColumn, recvKcolumn, recvKcolumn->id);
-                MPI_Send(column, 1, vectorType, getProcIdByColumn(j, numprocs), COL2UPDATE, MPI_COMM_WORLD);
+                //MPI_Recv(recvColumn, 1, *vectorType, MPI_ANY_SOURCE, COL2UPDATE,MPI_COMM_WORLD, &status );
+                receiveColumn(recvColumn, &status);
+                //updateColumn(recvColumn, recvKcolumn, recvKcolumn->id);
+                //MPI_Send(column, 1, *vectorType, 0, COL2UPDATE, MPI_COMM_WORLD);
+                //sendColumn(recvColumn, 0);
+                freeVector(recvColumn);
             }
-        }*/
+        }
         
     }
     
