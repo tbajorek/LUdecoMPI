@@ -7,13 +7,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "../include/LU.h"
 
 int main(int argc, char** argv) {
+    clock_t endTime, beginTime = clock();
+    int rows, cols;
     matrix *m, *m2;
     env e = init(argc, argv);
     if (e.myid == 0) {
-        m = zeroMatrix(6,6);
+        m = readFromFile("data/input.txt");
+        /*m = zeroMatrix(6,6);
         const double input[6][6]={
             3,4,7,8,1,6,
             2,5,8,1,5,9,
@@ -30,19 +34,24 @@ int main(int argc, char** argv) {
         }
 
         printf("----------Poczatkowa macierz m----\n");
-        displayMatrix(m);
+        displayMatrix(m);*/
+        sendDimensions(&m->rows, &m->cols, e);
     } else {
-        m = ghostMatrix(6,6);
+        receiveDimensions(&rows, &cols);
+        m = ghostMatrix(rows, cols);
     }
     m2 = decompose(m, e);
     
     if (e.myid == 0) {
-        printf("----------Koncowa macierz m2----\n");
-        displayMatrix(m2);
+        writeToFile("data/output.txt", m2);
     }
     freeMatrix(m2);
     freeMatrix(m);
-    
+    endTime = clock();
+    if (e.myid == 0) {
+        printf("Czas wykonania: %lf\n", (double)(endTime - beginTime) / CLOCKS_PER_SEC);
+    }
+    finish();
     return (EXIT_SUCCESS);
 }
 

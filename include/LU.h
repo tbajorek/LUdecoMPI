@@ -27,6 +27,8 @@ extern "C" {
     } env;
     
     env init(int argc, char** argv);
+    void sendDimensions(int* rows, int* cols, env e);
+    void receiveDimensions(int* rows, int* cols);
     matrix* decompose(matrix* m, env e);
     void finish();
 

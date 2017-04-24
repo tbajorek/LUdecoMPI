@@ -28,6 +28,7 @@ all: build run
 NUMOFPROCS = 5
 run:
 	mpiexec $(RUNFLAGS) -n $(NUMOFPROCS) ./$(TARGETFILE)
+#	./$(TARGETFILE)
 
 build:$(OBJDIR) $(TARGETDIR) $(TARGETFILE) $(RESOURCESDIR)
 
@@ -54,4 +55,5 @@ clean:
 
 mem: build
 	valgrind --leak-check=full  $(TARGETFILE)
-.PHONY: all clean build run mem
+	
+.PHONY: all clean build run mem gen

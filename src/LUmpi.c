@@ -47,6 +47,19 @@ int getProcIdByColumn(int column, int numprocs) {
     return column%(numprocs-1)+1;
 }
 
+void sendDimensions(int* rows, int* cols, env e) {
+    int procid;
+    for(procid = 1; procid < e.numprocs; ++procid) {
+        MPI_Send(rows, 1, MPI_INT, procid, 1, MPI_COMM_WORLD);
+        MPI_Send(cols, 1, MPI_INT, procid, 2, MPI_COMM_WORLD);
+    }
+}
+void receiveDimensions(int* rows, int* cols) {
+    MPI_Status status;
+    MPI_Recv(rows, 1, MPI_INT, MPI_ANY_SOURCE, 1, MPI_COMM_WORLD, &status);
+    MPI_Recv(cols, 1, MPI_INT, MPI_ANY_SOURCE, 2, MPI_COMM_WORLD, &status);
+}
+
 matrix* decompose(matrix* m, env e) {
     int n, procit;
     matrix *m2;
@@ -75,15 +88,30 @@ matrix* decompose(matrix* m, env e) {
             recvKcolumn = receiveColumn(&status);
         }
         // STEP 2
-        for (j = k+1; j <= cols; j++) {
-            if (myid == 0) {
-                column = getColumn(m2, j);
-                sendColumn(column, getProcIdByColumn(j, numprocs));
-                freeVector(column);
+        j = k + 1;
+        if (myid == 0) {
+            int procid;
+            int columns2work = cols - k;
+            int counter = 0;
+            while(j <= cols) {
+                for(procid = 1; procid < numprocs; ++procid) {
+                    if (j <= cols) {++counter;
+                        column = getColumn(m2, j);
+                        sendColumn(column, procid);
+                        freeVector(column);
+                    }
+                    ++j;
+                }
+            }
+            j = 0;
+            while(j < columns2work) {
                 column = receiveColumn(&status);
                 setColumn(m2, column, column->id);
                 freeVector(column);
-            } else if (myid == getProcIdByColumn(j, numprocs)) {
+                ++j;
+            }
+        } else {
+            for(j = k+myid; j <= cols; j = j + numprocs-1) {
                 recvColumn = receiveColumn(&status);
                 updateColumn(recvColumn, recvKcolumn, recvKcolumn->id);
                 sendColumn(recvColumn, 0);
@@ -94,8 +122,11 @@ matrix* decompose(matrix* m, env e) {
             freeVector(recvKcolumn);
         }
     }
-    MPI_Finalize();
     return m2;
+}
+
+void finish() {
+    MPI_Finalize();
 }
 
 #endif

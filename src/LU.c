@@ -7,9 +7,13 @@ env init(int argc, char** argv) {
     env e;
     e.myid = 0;
     e.numprocs = 0;
+    return e;
 }
 
-matrix* decompose(matrix* m) {
+void sendDimensions(int* rows, int* cols, env e) {}
+void receiveDimensions(int* rows, int* cols) {}
+
+matrix* decompose(matrix* m, env e) {
     matrix *m2 = copyMatrix(m);
     int i,j,k,s;
     for(k=1; k <= m->cols-1; k++){
