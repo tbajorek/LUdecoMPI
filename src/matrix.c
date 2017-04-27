@@ -113,7 +113,7 @@ void setColumn(matrix* m, vector* c, int column) {
     memcpy((void*)m->values[column-1], (const void*)c->values, (size_t)(c->size*sizeof(cell)));
 }
 
-matrix* readFromFile(const char* filename) {
+matrix* readMatrixFromFile(const char* filename) {
     int rows, cols, i, j;
     cell buffer;
     matrix* m;
@@ -131,7 +131,7 @@ matrix* readFromFile(const char* filename) {
     return m;
 }
 
-void writeToFile(const char* filename, matrix* m) {
+void writeMatrixToFile(const char* filename, matrix* m) {
     int i, j;
     cell value;
     FILE *mfile = fopen(filename, "w+");

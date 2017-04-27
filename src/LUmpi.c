@@ -118,6 +118,7 @@ matrix* decompose(matrix* m, env e) {
                 freeVector(recvColumn);
             }
         }
+        freeMatrix(m);
         if (myid != 0) {
             freeVector(recvKcolumn);
         }

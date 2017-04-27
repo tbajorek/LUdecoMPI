@@ -27,6 +27,8 @@ extern "C" {
     void setVecValue(vector* v, int pos, cell value);
     double getVecValue(vector* v, int pos);
     void displayVector(vector* v);
+    vector* readVectorFromFile(const char* filename);
+    void writeVectorToFile(const char* filename, vector* v);
 
 
 #ifdef	__cplusplus

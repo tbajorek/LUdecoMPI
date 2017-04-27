@@ -20,6 +20,14 @@ vector* zeroVector(int size) {
     return m;
 }
 
+vector* ghostVector(int rows) {
+    vector* v;
+    v = (vector*) malloc(sizeof(vector));
+    v->size = rows;
+    v->values = 0;
+    return v;
+}
+
 void displayVector(vector* v){
     int i, j;
     double value;
@@ -37,7 +45,9 @@ vector* createFromArray(cell* values, int size) {
 }
 
 void freeVector(vector* v) {
-    free(v->values);
+    if (v->values != 0) {
+        free(v->values);
+    }
     free(v);
 }
 
@@ -47,4 +57,31 @@ void setVecValue(vector* v, int pos, double value) {
 
 double getVecValue(vector* v, int pos) {
     return v->values[pos-1];
+}
+
+vector* readVectorFromFile(const char* filename) {
+    int rows, i;
+    cell buffer;
+    vector* v;
+    FILE *mfile = fopen(filename, "r");
+    fscanf(mfile, "%d\n", &rows);
+    v = createVector(rows);
+    for(i = 1; i <= v->size; ++i) {
+        fscanf(mfile, "%lf\n", &buffer);
+        setVecValue(v, i, buffer);
+    }
+    fclose(mfile);
+    return v;
+}
+
+void writeVectorToFile(const char* filename, vector* v) {
+    int i, j;
+    cell value;
+    FILE *vfile = fopen(filename, "w+");
+    fprintf(vfile, "%d\n", v->size);
+    for(i = 1; i <= v->size; ++i) {
+        value = getVecValue(v, i);
+        fprintf(vfile, "%lf\n", value);
+    }
+    fclose(vfile);
 }

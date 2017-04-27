@@ -32,8 +32,8 @@ extern "C" {
     vector* getColumn(matrix* m, int column);
     void setColumn(matrix* m, vector* c, int column);
     vector* getRow(matrix* m, int row);
-    matrix* readFromFile(const char* filename);
-    void writeToFile(const char* filename, matrix* m);
+    matrix* readMatrixFromFile(const char* filename);
+    void writeMatrixToFile(const char* filename, matrix* m);
 
 
 #ifdef	__cplusplus
