@@ -8,29 +8,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "../include/LU.h"
+#include "../include/equations.h"
 
 int main(int argc, char** argv) {
     clock_t endTime, beginTime = clock();
     int rows, cols;
     matrix *m, *m2;
+    vector* x, b;
+    equations eq;
     env e = init(argc, argv);
     if (e.myid == 0) {
-        m = readFromFile("data/input.txt");
-		rows = m->rows;
-		cols = m->cols;
+        eq.A = readMatrixFromFile("data/A.txt");
+        //eq.b = readVectorFromFile("data/b.txt");
+        rows = m->rows;
+        cols = m->cols;
         sendDimensions(&m->rows, &m->cols, e);
     } else {
         receiveDimensions(&rows, &cols);
-        m = ghostMatrix(rows, cols);
+        eq.A = ghostMatrix(rows, cols);
+        eq.b = ghostVector(rows);
     }
-    m2 = decompose(m, e);
+    solve(&eq, e);
     
     if (e.myid == 0) {
-        writeToFile("data/output.txt", m2);
+        writeMatrixToFile("data/LU.txt", eq.A);
+        //writeVectorToFile("data/x.txt", eq.x);
     }
-    freeMatrix(m2);
-    freeMatrix(m);
+    //freeEquations(&eq);
     endTime = clock();
     if (e.myid == 0) {
         printf("Wymiary macierzy: %d x %d\n", rows, cols);
