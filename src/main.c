@@ -17,24 +17,8 @@ int main(int argc, char** argv) {
     env e = init(argc, argv);
     if (e.myid == 0) {
         m = readFromFile("data/input.txt");
-        /*m = zeroMatrix(6,6);
-        const double input[6][6]={
-            3,4,7,8,1,6,
-            2,5,8,1,5,9,
-            3,6,9,7,8,9,
-            5,4,3,9,5,8,
-            3,9,1,8,5,4,
-            4,2,8,4,7,5
-        };
-        int i,j;
-        for(i=1; i <= m->rows; i++){
-          for(j=1; j <= m->cols; j++){
-            setMatValue(m,i,j,input[i-1][j-1]);
-          }
-        }
-
-        printf("----------Poczatkowa macierz m----\n");
-        displayMatrix(m);*/
+		rows = m->rows;
+		cols = m->cols;
         sendDimensions(&m->rows, &m->cols, e);
     } else {
         receiveDimensions(&rows, &cols);
@@ -49,6 +33,8 @@ int main(int argc, char** argv) {
     freeMatrix(m);
     endTime = clock();
     if (e.myid == 0) {
+        printf("Wymiary macierzy: %d x %d\n", rows, cols);
+        printf("Ilosc procesow: %d\n", e.numprocs);
         printf("Czas wykonania: %lf\n", (double)(endTime - beginTime) / CLOCKS_PER_SEC);
     }
     finish();
