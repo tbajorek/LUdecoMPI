@@ -12,14 +12,25 @@
 
 int main(int argc, char** argv) {
     clock_t endTime, beginTime = clock();
+    char* afile, *bfile, *xfile;
     int rows = 123654, cols;
     matrix *m, *m2;
     vector* x, b;
     equations eq;
     env e = init(argc, argv);
     if (e.myid == 0) {
-        eq.A = readMatrixFromFile("data/A.txt");
-        eq.b = readVectorFromFile("data/b.txt");
+        if (argc < 4) {
+            printf("Program is running with default parameters.\n");
+            afile = "data/A.txt";
+            bfile = "data/b.txt";
+            xfile = "data/x.txt";
+        } else {
+            afile = (char*)argv[1];
+            bfile = (char*)argv[2];
+            xfile = (char*)argv[3];
+        }
+        eq.A = readMatrixFromFile((const char*)afile);
+        eq.b = readVectorFromFile((const char*)bfile);
         eq.x = 0;
         rows = eq.A->rows;
         cols = eq.A->cols;
@@ -34,7 +45,7 @@ int main(int argc, char** argv) {
     
     if (e.myid == 0) {
         writeMatrixToFile("data/LU.txt", eq.A);
-        writeVectorToFile("data/x.txt", eq.x);
+        writeVectorToFile((const char*)xfile, eq.x);
     }
     freeEquations(&eq);
     endTime = clock();
