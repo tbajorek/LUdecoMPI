@@ -6,7 +6,7 @@
 env init(int argc, char** argv) {
     env e;
     e.myid = 0;
-    e.numprocs = 0;
+    e.numprocs = 1;
     return e;
 }
 

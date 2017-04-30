@@ -12,29 +12,31 @@
 
 int main(int argc, char** argv) {
     clock_t endTime, beginTime = clock();
-    int rows, cols;
+    int rows = 123654, cols;
     matrix *m, *m2;
     vector* x, b;
     equations eq;
     env e = init(argc, argv);
     if (e.myid == 0) {
         eq.A = readMatrixFromFile("data/A.txt");
-        //eq.b = readVectorFromFile("data/b.txt");
-        rows = m->rows;
-        cols = m->cols;
-        sendDimensions(&m->rows, &m->cols, e);
+        eq.b = readVectorFromFile("data/b.txt");
+        eq.x = 0;
+        rows = eq.A->rows;
+        cols = eq.A->cols;
+        sendDimensions(&eq.A->rows, &eq.A->cols, e);
     } else {
         receiveDimensions(&rows, &cols);
         eq.A = ghostMatrix(rows, cols);
         eq.b = ghostVector(rows);
+        eq.x = 0;
     }
     solve(&eq, e);
     
     if (e.myid == 0) {
         writeMatrixToFile("data/LU.txt", eq.A);
-        //writeVectorToFile("data/x.txt", eq.x);
+        writeVectorToFile("data/x.txt", eq.x);
     }
-    //freeEquations(&eq);
+    freeEquations(&eq);
     endTime = clock();
     if (e.myid == 0) {
         printf("Wymiary macierzy: %d x %d\n", rows, cols);
