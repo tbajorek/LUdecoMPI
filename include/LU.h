@@ -13,19 +13,19 @@ extern "C" {
 #endif
 
 #include "matrix.h"
-    
+
     #define METHOD_MPI
-    
+
     typedef struct {
         matrix* m;
         int pid;
     } result;
-    
+
     typedef struct {
         int myid;
         int numprocs;
     } env;
-    
+
     env init(int argc, char** argv);
     void sendDimensions(int* rows, int* cols, env e);
     void receiveDimensions(int* rows, int* cols);
