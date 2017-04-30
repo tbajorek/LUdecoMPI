@@ -62,24 +62,19 @@ void receiveDimensions(int* rows, int* cols) {
 
 matrix* decompose(matrix* m, env e) {
     int n, procit;
-    matrix *m2;
     int j,k,s;
     vector *column, *kcolumn, *recvKcolumn, *recvColumn;
     MPI_Status status;
     int cols = m->cols;
     int myid = e.myid, numprocs = e.numprocs;
-    if (myid == 0) {
-        m2 = copyMatrix(m);
-    } else {
-        m2 = ghostMatrix(m->rows, m->cols);
-    }
+    
     for(k=1; k <= cols-1; k++){
         if (myid == 0) {
             // STEP 1
-            for (s=k+1; s <= m2->rows; s++) {
-                setMatValue(m2, s, k, getMatValue(m2, s, k)/getMatValue(m2, k, k));
+            for (s=k+1; s <= m->rows; s++) {
+                setMatValue(m, s, k, getMatValue(m, s, k)/getMatValue(m, k, k));
             }
-            kcolumn = getColumn(m2, k);
+            kcolumn = getColumn(m, k);
             for (procit = 1; procit < numprocs; ++procit) {
                 sendColumn(kcolumn, procit);
             }
@@ -96,7 +91,7 @@ matrix* decompose(matrix* m, env e) {
             while(j <= cols) {
                 for(procid = 1; procid < numprocs; ++procid) {
                     if (j <= cols) {++counter;
-                        column = getColumn(m2, j);
+                        column = getColumn(m, j);
                         sendColumn(column, procid);
                         freeVector(column);
                     }
@@ -106,7 +101,7 @@ matrix* decompose(matrix* m, env e) {
             j = 0;
             while(j < columns2work) {
                 column = receiveColumn(&status);
-                setColumn(m2, column, column->id);
+                setColumn(m, column, column->id);
                 freeVector(column);
                 ++j;
             }
@@ -118,12 +113,12 @@ matrix* decompose(matrix* m, env e) {
                 freeVector(recvColumn);
             }
         }
-        freeMatrix(m);
+        
         if (myid != 0) {
             freeVector(recvKcolumn);
         }
     }
-    return m2;
+    return m;
 }
 
 void finish() {
