@@ -21,9 +21,9 @@ int main(int argc, char** argv) {
     if (e.myid == 0) {
         if (argc < 4) {
             printf("Program is running with default parameters.\n");
-            afile = "data/A.txt";
-            bfile = "data/b.txt";
-            xfile = "data/x.txt";
+            afile = "resources/A.txt";
+            bfile = "resources/b.txt";
+            xfile = "bin/x.txt";
         } else {
             afile = (char*)argv[1];
             bfile = (char*)argv[2];
@@ -43,9 +43,9 @@ int main(int argc, char** argv) {
     }
 
     solve(&eq, e);
-    
+
     if (e.myid == 0) {
-        writeMatrixToFile("data/LU.txt", eq.A);
+        writeMatrixToFile("bin/LU.txt", eq.A);
         writeVectorToFile((const char*)xfile, eq.x);
     }
     freeEquations(&eq);
