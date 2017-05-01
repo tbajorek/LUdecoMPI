@@ -1,7 +1,7 @@
 #Makro CC zawiera nazwę kompilatora
 CC=mpicc
 MPEPATH?=/home/lukasz/mpe-install/mpe2/
-FLAGS=-g -I$(MPEPATH)include -L$(MPEPATH)lib -lmpe -lpthread -lX11
+FLAGS=-g -Iinclude/ -I$(MPEPATH)include -L$(MPEPATH)lib -lmpe -lpthread -lX11
 # tbajorek
 # MPEPATH= ?
 # lukasz22

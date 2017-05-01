@@ -1,4 +1,4 @@
-#include "../include/equations.h"
+#include "equations.h"
 #include <stdio.h>
 
 double calculateLsum(equations* eq, int i) {

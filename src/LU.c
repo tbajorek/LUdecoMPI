@@ -1,4 +1,4 @@
-#include "../include/LU.h"
+#include "LU.h"
 #include <stdio.h>
 
 #ifdef METHOD_SEQ

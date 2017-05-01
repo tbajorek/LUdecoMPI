@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "../include/equations.h"
+#include "equations.h"
 
 int main(int argc, char** argv) {
     clock_t endTime, beginTime = clock();

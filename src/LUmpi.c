@@ -1,4 +1,4 @@
-#include "../include/LU.h"
+#include "LU.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -7,7 +7,7 @@
 #ifdef METHOD_MPI
 
 #ifdef MPE_LOGS
-#include "../include/mpe_utils.h"
+#include "mpe_utils.h"
 #endif
 
 #define KCOLUMN 1
@@ -178,7 +178,7 @@ matrix* decompose(matrix* m, env e) {
     MPI_Status status;
     int cols = m->cols;
     int myid = e.myid, numprocs = e.numprocs;
-    
+
     for(k=1; k <= cols-1; k++){
         if (myid == 0) {
             // STEP 1
@@ -224,7 +224,7 @@ matrix* decompose(matrix* m, env e) {
                 freeVector(recvColumn);
             }
         }
-        
+
         if (myid != 0) {
             freeVector(recvKcolumn);
         }
