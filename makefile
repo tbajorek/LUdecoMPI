@@ -34,6 +34,7 @@ LIBS=-lm
 
 NUMOFPROCS?=4
 MPE_LOGS?=false
+METHOD_TYPE?=METHOD_MPI # METHOD_SEQ
 all: run
 
 run: build
@@ -57,9 +58,9 @@ $(TARGETFILE): $(OBJFILES)
 	@echo executable file $(TARGETFILE) created
 $(OBJFILES): $(OBJDIR)%.o: $(SOURCEDIR)%.c
 ifeq ($(MPE_LOGS),true)
-	$(CC) -c $< -o $@ $(FLAGS) -D MPE_LOGS
+	$(CC) -c $< -o $@ $(FLAGS) -D MPE_LOGS -D $(METHOD_TYPE)
 else
-	$(CC) -c $< -o $@ $(FLAGS)
+	$(CC) -c $< -o $@ $(FLAGS) -D $(METHOD_TYPE)
 endif
 
 $(OBJFILES): $(INCFILES)
@@ -86,38 +87,57 @@ help:
 	@echo 'build    - Generates $(OBJDIR)*.o files, $(TARGETFILE).'
 	@echo '             Creates ${OBJDIR} dir, ${TARGETDIR} dir.'
 	@echo '             If MPE_LOGS=true, then $(TARGETFILE) is in MPE_LOGS mode.'
-	@echo '             DEFAULT: MPE_LOGS=false.'
+	@echo '             DEFAULT: MPE_LOGS=false. METHOD_TYPE=METHOD_MPI'
+	@echo '             If project is built with METHOD_TYPE=METHOD_MPI flag, '
+	@echo '             then this task runs program in parallel version.'
+	@echo '             If project was built with METHOD_TYPE=METHOD_SEQ flag, '
+	@echo '             then this task runs program in sequential version.'
 	@echo 'clean    - Removes $(OBJDIR)*.o files, $(TARGETFILE),'
 	@echo '             ${OBJDIR} dir, ${TARGETDIR} dir.'
 	@echo 'help     - Shows this printout.'
-	@echo 'jumpshot - Runs jumpshot app.'
+	@echo 'jumpshot - Runs jumpshot app. Project must be build in MPE_LOGS mode'
+	@echo '             and METHOD_TYPE=METHOD_MPI.'
 	@echo '             Can trigger log task.'
 	@echo 'log      - Generates $(MPELOG_SLOG2FILE). Can trigger run task.'
-	@echo '             $(TARGETFILE) must be in MPE_LOGS mode'
+	@echo '             Project must be build in MPE_LOGS mode'
+	@echo '             and METHOD_TYPE=METHOD_MPI.'
+	@echo 'mem    - Runs valgrind --leak-check=full  $(TARGETFILE)'
+	@echo '             Can trigger build task.'
 	@echo 'run      - Runs $(TARGETFILE). Can trigger build task.'
-	@echo '             If $(TARGETFILE) is in MPE_LOGS mode,'
+	@echo '             If project was built in MPE_LOGS mode'
+	@echo	'			        and METHOD_TYPE=METHOD_MPI,'
 	@echo '             then this task generates $(MPELOG_CLOG2FILE).'
+	@echo '             If project was built with METHOD_TYPE=METHOD_MPI flag, '
+	@echo '             then this task runs program in parallel version.'
+	@echo '             If project was built with METHOD_TYPE=METHOD_SEQ flag, '
+	@echo '             then this task runs program in sequential version.'
 	@echo ''
 	@echo '----------------------Advices----------------------'
-	@echo '1) If you want to change MPE_LOGS variable, first you clean project.'
+	@echo '1) If you want to change MPE_LOGS or METHOD_TYPE variables,'
+	@echo '    first you clean project.'
 	@echo '2) Check, if MPEPATH variable value is compatible with your env.'
 	@echo ''
 	@echo '----------------------Examples----------------------'
-	@echo 'make clean; make jumpshot MPE_LOGS=true NUMOFPROCS=3'
-	@echo ' Clean project. Build project with MPE_LOGS mode'
-	@echo ' and run $(TARGETFILE) with 3 proccess. Generate $(MPELOG_CLOG2FILE),'
+	@echo 'make clean; make jumpshot MPE_LOGS=true NUMOFPROCS=3 '
+	@echo ' Clean project. Build project parallel version with MPE_LOGS mode'
+	@echo ' and run $(TARGETFILE) with 3 proccesses. Generate $(MPELOG_CLOG2FILE),'
 	@echo ' $(MPELOG_SLOG2FILE). Run jumpshot app.'
 	@echo ''
 	@echo 'make clean;'
-	@echo 'make MPEPATH=/opt/nfs/mpe2-2.4.9b/ MPE_LOGS=true NUMOFPROCS=3'
-	@echo ' Clean project. Build project with MPE_LOGS mode'
-	@echo ' and run $(TARGETFILE) with 3 proccess.'
+	@echo 'make MPEPATH=/opt/nfs/mpe2-2.4.9b/ MPE_LOGS=true NUMOFPROCS=3 '
+	@echo '     METHOD_TYPE=METHOD_MPI'
+	@echo ' Clean project. Build project parallel version with MPE_LOGS mode'
+	@echo ' and run $(TARGETFILE) with 3 proccesses.'
 	@echo ' MPEPATH variable value is given from command line.'
 	@echo ' $(MPELOG_SLOG2FILE). Run jumpshot app.'
 	@echo ''
 	@echo 'make clean; make'
-	@echo ' Clean project. Build project without MPE_LOGS mode'
-	@echo ' and run $(TARGETFILE) with 4 proccess.'
+	@echo ' Clean project. Build project parallel version without MPE_LOGS mode'
+	@echo ' and run $(TARGETFILE) with 4 proccesses.'
+	@echo ''
+	@echo 'make clean; make METHOD_TYPE=METHOD_SEQ NUMOFPROCS=1'
+	@echo ' Clean project. Build project sequential version without MPE_LOGS mode'
+	@echo ' and run $(TARGETFILE) with 1 proccess.'
 
 
 

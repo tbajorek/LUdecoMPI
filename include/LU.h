@@ -14,8 +14,6 @@ extern "C" {
 
 #include "matrix.h"
 
-    #define METHOD_MPI
-
     typedef struct {
         matrix* m;
         int pid;

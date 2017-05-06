@@ -4,6 +4,7 @@
 #ifdef METHOD_SEQ
 
 env init(int argc, char** argv) {
+    printf("METHOD_SEQ type enabled.\n");
     env e;
     e.myid = 0;
     e.numprocs = 1;
