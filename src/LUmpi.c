@@ -54,6 +54,7 @@ env init(int argc, char** argv) {
     MPI_Comm_size(MPI_COMM_WORLD,&e.numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD,&e.myid);
     if(e.myid == 0){
+      printf("METHOD_MPI type enabled.\n");
 #ifdef MPE_LOGS
       printf("MPE_LOGS mode enabled.\n");
       MPE_Describe_state( START_SEND_COLUMN_SIZE,
