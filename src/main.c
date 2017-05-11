@@ -21,9 +21,9 @@ int main(int argc, char** argv) {
     if (e.myid == 0) {
         if (argc < 4) {
             printf("Program is running with default parameters.\n");
-            afile = "resources/A.txt";
-            bfile = "resources/b.txt";
-            xfile = "bin/x.txt";
+            afile = "resources/A2.txt";
+            bfile = "resources/b2.txt";
+            xfile = "bin/x2.txt";
         } else {
             afile = (char*)argv[1];
             bfile = (char*)argv[2];
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
         sendDimensions(&eq.A->rows, &eq.A->cols, e);
     } else {
         receiveDimensions(&rows, &cols);
-        eq.A = ghostMatrix(rows, cols);
+        eq.A = createMatrix(rows, cols);
         eq.b = ghostVector(rows);
         eq.x = 0;
     }

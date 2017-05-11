@@ -176,10 +176,14 @@ matrix* decompose(matrix* m, env e) {
     int n, procit;
     int j,k,s;
     vector *column, *kcolumn, *recvKcolumn, *recvColumn;
+    matrix *buffer;
+    int bufferPos;
     MPI_Status status;
     int cols = m->cols;
     int myid = e.myid, numprocs = e.numprocs;
-
+    if (myid != 0) {
+        buffer = createMatrix(m->rows, cols/(numprocs-1)+1);
+    }
     for(k=1; k <= cols-1; k++){
         if (myid == 0) {
             // STEP 1
@@ -218,17 +222,28 @@ matrix* decompose(matrix* m, env e) {
                 ++j;
             }
         } else {
+            bufferPos = 1;
             for(j = k+myid; j <= cols; j = j + numprocs-1) {
                 recvColumn = receiveColumn(&status);
+                setColumn(buffer, recvColumn, bufferPos);
+                freeVector(recvColumn);
+                ++bufferPos;
+            }
+            bufferPos = 1;
+            for(j = k+myid; j <= cols; j = j + numprocs-1) {
+                recvColumn = getColumn(buffer, bufferPos);
                 updateColumn(recvColumn, recvKcolumn, recvKcolumn->id);
                 sendColumn(recvColumn, 0);
                 freeVector(recvColumn);
+                ++bufferPos;
             }
         }
-
         if (myid != 0) {
             freeVector(recvKcolumn);
         }
+    }
+    if (myid != 0) {
+        freeMatrix(buffer);
     }
     return m;
 }
