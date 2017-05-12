@@ -1,15 +1,14 @@
-/*
- * File:   maina.c
- * Author: tomek
- *
- * Created on 4 kwietnia 2017, 03:37
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "equations.h"
 
+/**
+ * The main function of the program
+ * @param argc Number of parameters passed to the program
+ * @param argv List of passed parameters
+ * @return 
+ */
 int main(int argc, char** argv) {
     clock_t endTime, beginTime = clock();
     char* afile, *bfile, *xfile;

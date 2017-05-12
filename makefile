@@ -1,9 +1,9 @@
 #Makro CC zawiera nazwę kompilatora
 CC=mpicc
-MPEPATH?=/home/lukasz/mpe-install/mpe2/
+MPEPATH?=/opt/nfs/mpe2-2.4.9b/
 FLAGS=-g -Iinclude/ -I$(MPEPATH)include -L$(MPEPATH)lib -lmpe -lpthread -lX11
 # tbajorek
-# MPEPATH= ?
+# MPEPATH=/opt/mpe2/
 # lukasz22
 # MPEPATH=/home/lukasz/mpe-install/mpe2/
 # TAURUS
@@ -88,7 +88,7 @@ help:
 	@echo '             Creates ${OBJDIR} dir, ${TARGETDIR} dir.'
 	@echo '             If MPE_LOGS=true, then $(TARGETFILE) is in MPE_LOGS mode.'
 	@echo '             DEFAULT: MPE_LOGS=false, METHOD_TYPE=METHOD_MPI,'
-	@echo '             MPEPATH=/home/lukasz/mpe-install/mpe2/'
+	@echo '             MPEPATH=/opt/nfs/mpe2-2.4.9b/'
 	@echo '             If project is built with METHOD_TYPE=METHOD_MPI flag, '
 	@echo '             then $(TARGETFILE) is in parallel version.'
 	@echo '             If project is built with METHOD_TYPE=METHOD_SEQ flag, '
@@ -125,7 +125,7 @@ help:
 	@echo ' $(MPELOG_SLOG2FILE). Run jumpshot app.'
 	@echo ''
 	@echo 'make clean;'
-	@echo 'make MPEPATH=/opt/nfs/mpe2-2.4.9b/ MPE_LOGS=true NUMOFPROCS=3 '
+	@echo 'make MPEPATH=/path/to/mpe MPE_LOGS=true NUMOFPROCS=3 '
 	@echo '     METHOD_TYPE=METHOD_MPI'
 	@echo ' Clean project. Build project parallel version with MPE_LOGS mode'
 	@echo ' and run $(TARGETFILE) with 3 proccesses.'
